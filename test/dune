@@ -8,6 +8,11 @@
  (modules clipboard_test)
  (libraries clipboard))
 
+(test
+ (name osc52_test)
+ (modules osc52_test)
+ (libraries osc52))
+
 (cram
  (enabled_if
   (= %{os_type} Unix))

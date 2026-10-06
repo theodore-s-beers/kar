@@ -42,16 +42,19 @@ Invalid input must fail before invoking the clipboard command.
   [1]
   $ test ! -e clipboard
   $ ../bin/main.exe
-  Usage: gak <hex-scalar>
+  Usage: gak [--osc52] <hex-scalar>
   Example: gak U+1F600
+    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
   [1]
   $ ../bin/main.exe 41 42
-  Usage: gak <hex-scalar>
+  Usage: gak [--osc52] <hex-scalar>
   Example: gak U+1F600
+    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
   [1]
   $ ../bin/main.exe --help
-  Usage: gak <hex-scalar>
+  Usage: gak [--osc52] <hex-scalar>
   Example: gak U+1F600
+    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
 
 Clipboard failures must propagate to the caller.
 
@@ -107,3 +110,25 @@ A failed Wayland command must not silently switch to X11.
   $ cat arguments
   --type
   text/plain;charset=utf-8
+
+OSC 52 requires terminal output and never invokes a desktop clipboard backend.
+
+  $ rm clipboard
+  $ ../bin/main.exe --osc52 41 > output
+  gak: --osc52 requires standard output to be a terminal
+  [1]
+  $ test ! -s output
+  $ test ! -e clipboard
+  $ ../bin/main.exe 41 --osc52 > output
+  gak: --osc52 requires standard output to be a terminal
+  [1]
+  $ test ! -s output
+  $ ../bin/main.exe --osc52 D800 > output
+  gak: expected a Unicode scalar (U+0000–U+10FFFF, excluding surrogates)
+  [1]
+  $ test ! -s output
+  $ ../bin/main.exe --osc52
+  Usage: gak [--osc52] <hex-scalar>
+  Example: gak U+1F600
+    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
+  [1]

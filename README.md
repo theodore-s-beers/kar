@@ -60,6 +60,14 @@ The backend is selected automatically:
 
 On Linux, run in a graphical session. Use a UTF-8 locale with `xsel`.
 
+For SSH or terminal-only environments, you can request the terminal's clipboard instead:
+
+```sh
+gak --osc52 U+1F600
+```
+
+This requires a terminal that supports and permits [OSC 52](https://jvns.ca/til/vim-osc52/) clipboard writes. Multiplexers like tmux may require configuration. Output must go directly to a terminal. The status message reads `Sent to terminal clipboard:` because the terminal does not confirm whether the copy succeeded.
+
 ## Development
 
 ```sh

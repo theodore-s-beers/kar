@@ -7,3 +7,8 @@
  (name clipboard)
  (modules clipboard)
  (libraries unix))
+
+(library
+ (name osc52)
+ (modules osc52)
+ (libraries unix))
