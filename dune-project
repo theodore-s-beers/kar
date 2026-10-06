@@ -2,6 +2,11 @@
 (name kar)
 (cram enable)
 (generate_opam_files true)
+(maintainers "Theo Beers <theodore@boot.dev>")
+(authors "Theo Beers")
+(license MIT)
+(source
+ (github theodore-s-beers/kar))
 
 (package
  (name kar)
