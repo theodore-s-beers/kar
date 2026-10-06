@@ -1,0 +1,8 @@
+(library
+ (name scalar)
+ (modules scalar))
+
+(library
+ (name clipboard)
+ (modules clipboard)
+ (libraries unix))

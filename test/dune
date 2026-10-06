@@ -1,0 +1,13 @@
+(test
+ (name scalar_test)
+ (modules scalar_test)
+ (libraries scalar))
+
+(test
+ (name clipboard_test)
+ (modules clipboard_test)
+ (libraries clipboard))
+
+(cram
+ (enabled_if (= %{os_type} Unix))
+ (deps ../bin/main.exe))
