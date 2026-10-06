@@ -27,7 +27,9 @@ let run ~osc52 input =
 
 let () =
   match Array.to_list Sys.argv with
-  | [ _; ("--help" | "-h") ] | [ _; "--osc52"; ("--help" | "-h") ] ->
+  | [ _; ("--help" | "-h") ]
+  | [ _; "--osc52"; ("--help" | "-h") ]
+  | [ _; ("--help" | "-h"); "--osc52" ] ->
       print_endline usage
   | [ _; input ] when input <> "--osc52" -> run ~osc52:false input
   | [ _; "--osc52"; input ] | [ _; input; "--osc52" ] -> run ~osc52:true input

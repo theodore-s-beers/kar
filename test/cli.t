@@ -132,3 +132,14 @@ OSC 52 requires terminal output and never invokes a desktop clipboard backend.
   Example: kar U+1F600
     --osc52  Send clipboard request to terminal (e.g. over SSH)
   [1]
+
+Both help flags work before or after --osc52 without touching the clipboard.
+
+  $ ../bin/main.exe --help > expected-help
+  $ for flag in --help -h; do
+  >   ../bin/main.exe --osc52 "$flag" > actual-help || exit 1
+  >   cmp expected-help actual-help || exit 1
+  >   ../bin/main.exe "$flag" --osc52 > actual-help || exit 1
+  >   cmp expected-help actual-help || exit 1
+  > done
+  $ test ! -e clipboard
