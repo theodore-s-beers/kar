@@ -5,31 +5,49 @@ let select ~windows ~getenv ~available =
     match getenv name with Some value -> value <> "" | None -> false
   in
   if windows then
-    Ok { program = "powershell.exe";
-         arguments =
-           [ "-NoLogo"; "-NoProfile"; "-NonInteractive"; "-STA"; "-Command";
-             "[Console]::InputEncoding = [System.Text.UTF8Encoding]::new($false); \
-              Set-Clipboard -Value ([Console]::In.ReadToEnd()) -ErrorAction Stop" ] }
-  else if available "pbcopy" then
-    Ok { program = "pbcopy"; arguments = [] }
+    Ok
+      {
+        program = "powershell.exe";
+        arguments =
+          [
+            "-NoLogo";
+            "-NoProfile";
+            "-NonInteractive";
+            "-STA";
+            "-Command";
+            "[Console]::InputEncoding = \
+             [System.Text.UTF8Encoding]::new($false); Set-Clipboard -Value \
+             ([Console]::In.ReadToEnd()) -ErrorAction Stop";
+          ];
+      }
+  else if available "pbcopy" then Ok { program = "pbcopy"; arguments = [] }
   else if has_display "WAYLAND_DISPLAY" && available "wl-copy" then
-    Ok { program = "wl-copy"; arguments = [ "--type"; "text/plain;charset=utf-8" ] }
+    Ok
+      {
+        program = "wl-copy";
+        arguments = [ "--type"; "text/plain;charset=utf-8" ];
+      }
   else if has_display "DISPLAY" && available "xclip" then
     Ok { program = "xclip"; arguments = [ "-selection"; "clipboard"; "-in" ] }
   else if has_display "DISPLAY" && available "xsel" then
     Ok { program = "xsel"; arguments = [ "--clipboard"; "--input" ] }
   else
-    Error "no clipboard backend available; on Linux, install wl-clipboard (Wayland) or xclip/xsel (X11) and run inside a graphical session; on macOS, ensure pbcopy is on PATH"
+    Error
+      "no clipboard backend available; on Linux, install wl-clipboard \
+       (Wayland) or xclip/xsel (X11) and run inside a graphical session; on \
+       macOS, ensure pbcopy is on PATH"
 
 let available program =
   let path = Option.value (Sys.getenv_opt "PATH") ~default:"" in
   String.split_on_char ':' path
   |> List.exists (fun directory ->
-         let file = Filename.concat (if directory = "" then "." else directory) program in
-         try
-           Unix.access file [ Unix.X_OK ];
-           (Unix.stat file).Unix.st_kind = Unix.S_REG
-         with Unix.Unix_error _ -> false)
+      let file =
+        Filename.concat (if directory = "" then "." else directory) program
+      in
+      try
+        Unix.access file [ Unix.X_OK ];
+        (Unix.stat file).Unix.st_kind = Unix.S_REG
+      with Unix.Unix_error _ -> false)
 
 let run backend character =
   (* pbcopy and xsel interpret text using the locale. Leave the Linux user's
@@ -48,13 +66,14 @@ let run backend character =
       with Sys_error message -> Some message
     in
     let status = Unix.close_process_out channel in
-    match status, write_error with
+    match (status, write_error) with
     | Unix.WEXITED 0, None -> Ok ()
     | Unix.WEXITED 0, Some message -> Error message
     | Unix.WEXITED code, _ ->
         Error (Printf.sprintf "%s exited with status %d" backend.program code)
     | (Unix.WSIGNALED signal | Unix.WSTOPPED signal), _ ->
-        Error (Printf.sprintf "%s interrupted by signal %d" backend.program signal)
+        Error
+          (Printf.sprintf "%s interrupted by signal %d" backend.program signal)
   with
   | Unix.Unix_error (error, _, _) ->
       Error (backend.program ^ ": " ^ Unix.error_message error)

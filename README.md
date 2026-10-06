@@ -22,13 +22,9 @@ gak 0x00E9  # é
 gak 41      # A
 ```
 
-Pass exactly one hexadecimal Unicode scalar value. The `U+` and `0x`
-prefixes are optional and case-insensitive. Bare numbers are also hexadecimal.
-Valid values range from `0000` to `10FFFF`, excluding surrogates (`D800`–`DFFF`).
+Pass exactly one hexadecimal Unicode scalar value. The `U+` and `0x` prefixes are optional and case-insensitive. Bare numbers are also hexadecimal. Valid values range from `0000` to `10FFFF`, excluding surrogates (`D800`–`DFFF`).
 
-`gak` copies the character without adding a newline.
-Success is silent; invalid input or clipboard errors produce a nonzero exit
-status. Use `gak --help` for a usage reminder.
+`gak` copies the character without adding a newline. Success is silent; invalid input or clipboard errors produce a nonzero exit status. Use `gak --help` for a usage reminder.
 
 ## Clipboard support
 
@@ -41,14 +37,8 @@ The backend is selected automatically:
 | Linux / X11     | [`xclip`](https://github.com/astrand/xclip), or `xsel` as a fallback                                                                                                                |
 | Windows         | Windows PowerShell (`powershell.exe`) with [`Set-Clipboard`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-clipboard?view=powershell-5.1) |
 
-On Linux, run in a graphical session with `WAYLAND_DISPLAY` or `DISPLAY` set.
-Wayland is preferred when `wl-copy` is installed; otherwise an available X11
-backend is used if `DISPLAY` is set. For example, on Debian/Ubuntu, install
-`wl-clipboard` or `xclip` with your package manager. Use a UTF-8 locale with `xsel`.
-Backend failures return an error instead of silently trying another clipboard.
+On Linux, run in a graphical session with `WAYLAND_DISPLAY` or `DISPLAY` set. Wayland is preferred when `wl-copy` is installed; otherwise an available X11 backend is used if `DISPLAY` is set. For example, on Debian/Ubuntu, install `wl-clipboard` or `xclip` with your package manager. Use a UTF-8 locale with `xsel`. Backend failures return an error instead of silently trying another clipboard.
 
-Windows input is explicitly decoded as UTF-8 by PowerShell. Clipboard consumers
-may not preserve control characters such as U+0000, even though they are valid scalars.
+Windows input is explicitly decoded as UTF-8 by PowerShell. Clipboard consumers may not preserve control characters such as U+0000, even though they are valid scalars.
 
-Tests cover scalar encoding, backend selection, and mocked clipboard commands.
-Actual desktop clipboard interoperability must be checked on each target platform.
+Tests cover scalar encoding, backend selection, and mocked clipboard commands. Actual desktop clipboard interoperability must be checked on each target platform.

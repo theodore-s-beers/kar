@@ -9,5 +9,6 @@
  (libraries clipboard))
 
 (cram
- (enabled_if (= %{os_type} Unix))
+ (enabled_if
+  (= %{os_type} Unix))
  (deps ../bin/main.exe))
