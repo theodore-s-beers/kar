@@ -4,17 +4,33 @@ _Grab a karacter_: copy a Unicode character to the clipboard on Linux, macOS, or
 
 ## Build and run
 
-In an initialized opam switch, install the Unicode data library, then build and run:
+In an initialized opam switch, install the project dependencies, then build and run:
 
 ```sh
-opam install uucp
+opam install --deps-only .
 dune build
 dune exec gak -- U+1F600
 ```
 
 The executable is built at `_build/default/bin/main.exe`.
 
+## Install
+
+From a local clone:
+
+```sh
+opam install .
+```
+
+Or directly from GitHub:
+
+```sh
+opam pin add gak git+https://github.com/theodore-s-beers/gak.git
+```
+
 ## Usage
+
+Assuming `gak` is in `PATH`:
 
 ```sh
 gak U+1F600  # 😀
@@ -47,6 +63,7 @@ On Linux, run in a graphical session. Use a UTF-8 locale with `xsel`.
 ## Development
 
 ```sh
+opam install --deps-only --with-test --with-dev-setup .
 dune fmt
 dune runtest
 ```
