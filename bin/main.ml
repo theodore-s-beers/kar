@@ -10,8 +10,11 @@ let () =
   | [ _; input ] -> (
       match Scalar.of_string input with
       | Ok scalar -> (
-          match Clipboard.copy (Scalar.to_utf8 scalar) with
-          | Ok () -> ()
+          let character = Scalar.to_utf8 scalar in
+          match Clipboard.copy character with
+          | Ok () ->
+              Printf.printf "Copied to clipboard:\nU+%04X %s\n"
+                (Uchar.to_int scalar) (Scalar.name scalar)
           | Error message -> fail message)
       | Error message -> fail message)
   | _ ->

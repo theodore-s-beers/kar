@@ -8,10 +8,30 @@ Use a mock clipboard command to check the exact bytes without touching the syste
   $ chmod +x pbcopy
   $ export PATH="$PWD:$PATH"
   $ ../bin/main.exe U+1F600
+  Copied to clipboard:
+  U+1F600 GRINNING FACE
   $ printf '\360\237\230\200' > expected
   $ cmp expected clipboard
   $ ../bin/main.exe 41
+  Copied to clipboard:
+  U+0041 LATIN CAPITAL LETTER A
   $ printf A > expected
+  $ cmp expected clipboard
+
+Control characters are identified without printing the control character itself.
+
+  $ ../bin/main.exe 0A
+  Copied to clipboard:
+  U+000A END OF LINE
+  $ printf '\n' > expected
+  $ cmp expected clipboard
+
+Unnamed scalars still have a two-line confirmation.
+
+  $ ../bin/main.exe E000
+  Copied to clipboard:
+  U+E000 (no Unicode name)
+  $ printf '\356\200\200' > expected
   $ cmp expected clipboard
 
 Invalid input must fail before invoking the clipboard command.
@@ -55,12 +75,16 @@ Use an isolated PATH to exercise Linux backends even on macOS.
   $ cp backends/wl-copy backends/xclip
   $ cp backends/wl-copy backends/xsel
   $ PATH="$PWD/backends" WAYLAND_DISPLAY=wayland-0 DISPLAY=:0 ../bin/main.exe U+1F600
+  Copied to clipboard:
+  U+1F600 GRINNING FACE
   $ printf '\360\237\230\200' > expected
   $ cmp expected clipboard
   $ cat arguments
   --type
   text/plain;charset=utf-8
   $ PATH="$PWD/backends" WAYLAND_DISPLAY= DISPLAY=:0 ../bin/main.exe U+1F600
+  Copied to clipboard:
+  U+1F600 GRINNING FACE
   $ cmp expected clipboard
   $ cat arguments
   -selection
@@ -68,6 +92,8 @@ Use an isolated PATH to exercise Linux backends even on macOS.
   -in
   $ rm backends/xclip
   $ PATH="$PWD/backends" WAYLAND_DISPLAY= DISPLAY=:0 ../bin/main.exe U+1F600
+  Copied to clipboard:
+  U+1F600 GRINNING FACE
   $ cmp expected clipboard
   $ cat arguments
   --clipboard

@@ -32,3 +32,15 @@ let to_utf8 scalar =
   let buffer = Buffer.create 4 in
   Buffer.add_utf_8_uchar buffer scalar;
   Buffer.contents buffer
+
+let name scalar =
+  match Uucp.Name.name scalar with
+  | "" -> (
+      match
+        List.find_opt
+          (fun (tag, _) -> tag = `Control)
+          (Uucp.Name.name_alias scalar)
+      with
+      | Some (_, alias) -> alias
+      | None -> "(no Unicode name)")
+  | name -> name

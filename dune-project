@@ -4,4 +4,5 @@
 
 (package
  (name gak)
+ (depends ocaml dune uucp)
  (synopsis "Grab a karacter: copy a Unicode scalar to the clipboard"))

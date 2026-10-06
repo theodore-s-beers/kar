@@ -1,6 +1,7 @@
 (library
  (name scalar)
- (modules scalar))
+ (modules scalar)
+ (libraries uucp))
 
 (library
  (name clipboard)

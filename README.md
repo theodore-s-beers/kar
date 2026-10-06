@@ -4,9 +4,10 @@ Grab a karacter: copy a Unicode character to the clipboard on macOS, Linux, or W
 
 ## Development
 
-Install OCaml and Dune (on macOS, `brew install ocaml dune`), then run:
+Install OCaml and Dune (on macOS, `brew install ocaml dune`). In an initialized opam switch, install the Unicode data library, then build and run:
 
 ```sh
+opam install uucp
 dune build
 dune runtest
 dune exec gak -- U+1F600
@@ -24,7 +25,16 @@ gak 41      # A
 
 Pass exactly one hexadecimal Unicode scalar value. The `U+` and `0x` prefixes are optional and case-insensitive. Bare numbers are also hexadecimal. Valid values range from `0000` to `10FFFF`, excluding surrogates (`D800`–`DFFF`).
 
-`gak` copies the character without adding a newline. Success is silent; invalid input or clipboard errors produce a nonzero exit status. Use `gak --help` for a usage reminder.
+`gak` copies the character without adding a newline and confirms success with its code point and Unicode name:
+
+```text
+Copied to clipboard:
+U+1F600 GRINNING FACE
+```
+
+Names come from the Unicode data bundled with `uucp`; no network lookup is needed. Control characters use a Unicode control-name alias when available. Scalars without a name, including private-use and unassigned values, show `(no Unicode name)`. The character itself is never printed in the confirmation.
+
+Invalid input or clipboard errors produce a nonzero exit status. Use `gak --help` for a usage reminder.
 
 ## Clipboard support
 

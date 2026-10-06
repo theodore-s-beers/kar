@@ -42,3 +42,22 @@ let () =
       "U+0x41";
       "😀";
     ]
+
+let () =
+  List.iter
+    (fun (code, expected) ->
+      let actual = Scalar.name (Uchar.of_int code) in
+      if actual <> expected then
+        failwith (Printf.sprintf "unexpected name for U+%04X: %s" code actual))
+    [
+      (0x0041, "LATIN CAPITAL LETTER A");
+      (0x1f600, "GRINNING FACE");
+      (0x000a, "END OF LINE");
+      (0x0000, "NULL");
+      (0x200b, "ZERO WIDTH SPACE");
+      (0x4e00, "CJK UNIFIED IDEOGRAPH-4E00");
+      (0xac00, "HANGUL SYLLABLE GA");
+      (0xe000, "(no Unicode name)");
+      (0x0378, "(no Unicode name)");
+      (0xffff, "(no Unicode name)");
+    ]
