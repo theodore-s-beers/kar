@@ -38,31 +38,31 @@ Invalid input must fail before invoking the clipboard command.
 
   $ rm clipboard
   $ ../bin/main.exe D800
-  gak: expected a Unicode scalar (U+0000–U+10FFFF, excluding surrogates)
+  kar: expected a Unicode scalar (U+0000–U+10FFFF, excluding surrogates)
   [1]
   $ test ! -e clipboard
   $ ../bin/main.exe
-  Usage: gak [--osc52] <hex-scalar>
-  Example: gak U+1F600
-    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
+  Usage: kar [--osc52] <hex-scalar>
+  Example: kar U+1F600
+    --osc52  Send clipboard request to terminal (e.g. over SSH)
   [1]
   $ ../bin/main.exe 41 42
-  Usage: gak [--osc52] <hex-scalar>
-  Example: gak U+1F600
-    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
+  Usage: kar [--osc52] <hex-scalar>
+  Example: kar U+1F600
+    --osc52  Send clipboard request to terminal (e.g. over SSH)
   [1]
   $ ../bin/main.exe --help
-  Usage: gak [--osc52] <hex-scalar>
-  Example: gak U+1F600
-    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
+  Usage: kar [--osc52] <hex-scalar>
+  Example: kar U+1F600
+    --osc52  Send clipboard request to terminal (e.g. over SSH)
 
 Clipboard failures must propagate to the caller.
 
   $ CLIPBOARD_EXIT=7 ../bin/main.exe 41
-  gak: pbcopy exited with status 7
+  kar: pbcopy exited with status 7
   [1]
   $ PATH=/nonexistent ../bin/main.exe 41
-  gak: no clipboard backend available; on Linux, install wl-clipboard (Wayland) or xclip/xsel (X11) and run inside a graphical session; on macOS, ensure pbcopy is on PATH
+  kar: no clipboard backend available; on Linux, install wl-clipboard (Wayland) or xclip/xsel (X11) and run inside a graphical session; on macOS, ensure pbcopy is on PATH
   [1]
 
 Use an isolated PATH to exercise Linux backends even on macOS.
@@ -105,7 +105,7 @@ Use an isolated PATH to exercise Linux backends even on macOS.
 A failed Wayland command must not silently switch to X11.
 
   $ PATH="$PWD/backends" WAYLAND_DISPLAY=wayland-0 DISPLAY=:0 CLIPBOARD_EXIT=7 ../bin/main.exe 41
-  gak: wl-copy exited with status 7
+  kar: wl-copy exited with status 7
   [1]
   $ cat arguments
   --type
@@ -115,20 +115,20 @@ OSC 52 requires terminal output and never invokes a desktop clipboard backend.
 
   $ rm clipboard
   $ ../bin/main.exe --osc52 41 > output
-  gak: --osc52 requires standard output to be a terminal
+  kar: --osc52 requires standard output to be a terminal
   [1]
   $ test ! -s output
   $ test ! -e clipboard
   $ ../bin/main.exe 41 --osc52 > output
-  gak: --osc52 requires standard output to be a terminal
+  kar: --osc52 requires standard output to be a terminal
   [1]
   $ test ! -s output
   $ ../bin/main.exe --osc52 D800 > output
-  gak: expected a Unicode scalar (U+0000–U+10FFFF, excluding surrogates)
+  kar: expected a Unicode scalar (U+0000–U+10FFFF, excluding surrogates)
   [1]
   $ test ! -s output
   $ ../bin/main.exe --osc52
-  Usage: gak [--osc52] <hex-scalar>
-  Example: gak U+1F600
-    --osc52  Send a clipboard request to the terminal (e.g. over SSH)
+  Usage: kar [--osc52] <hex-scalar>
+  Example: kar U+1F600
+    --osc52  Send clipboard request to terminal (e.g. over SSH)
   [1]

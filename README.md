@@ -1,6 +1,6 @@
-# gak
+# kar
 
-_Grab a karacter_: copy a Unicode character to the clipboard on Linux, macOS, or Windows.
+kar(acter): copy a Unicode character to the clipboard on Linux, macOS, or Windows.
 
 ## Build and run
 
@@ -9,7 +9,7 @@ In an initialized opam switch, install the project dependencies, then build and 
 ```sh
 opam install --deps-only .
 dune build
-dune exec gak -- U+1F600
+dune exec kar -- U+1F600
 ```
 
 The executable is built at `_build/default/bin/main.exe`.
@@ -25,22 +25,22 @@ opam install .
 Or directly from GitHub:
 
 ```sh
-opam pin add gak git+https://github.com/theodore-s-beers/gak.git
+opam pin add kar git+https://github.com/theodore-s-beers/kar.git
 ```
 
 ## Usage
 
-Assuming `gak` is in `PATH`:
+Assuming `kar` is in `PATH`:
 
 ```sh
-gak U+1F600  # 😀
-gak 0x00E9   # é
-gak 41       # A
+kar U+1F600  # 😀
+kar 0x00E9   # é
+kar 41       # A
 ```
 
 Pass exactly one hexadecimal Unicode scalar value. The `U+` and `0x` prefixes are optional and case-insensitive. Bare numbers are also treated as hexadecimal. Valid values range from `0000` to `10FFFF`, excluding surrogates (`D800`–`DFFF`).
 
-`gak` copies the character _without_ adding a newline and confirms success with the code point and its Unicode name:
+`kar` copies the character _without_ adding a newline and confirms success with the code point and its Unicode name:
 
 ```text
 Copied to clipboard:
@@ -63,7 +63,7 @@ On Linux, run in a graphical session. Use a UTF-8 locale with `xsel`.
 For SSH or terminal-only environments, you can request the terminal's clipboard instead:
 
 ```sh
-gak --osc52 U+1F600
+kar --osc52 U+1F600
 ```
 
 This requires a terminal that supports and permits [OSC 52](https://jvns.ca/til/vim-osc52/) clipboard writes. Multiplexers like tmux may require configuration. Output must go directly to a terminal. The status message reads `Sent to terminal clipboard:` because the terminal does not confirm whether the copy succeeded.

@@ -1,4 +1,4 @@
 (executable
  (name main)
- (public_name gak)
+ (public_name kar)
  (libraries scalar clipboard osc52))

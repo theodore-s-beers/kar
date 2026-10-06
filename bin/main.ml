@@ -1,10 +1,10 @@
 let usage =
-  "Usage: gak [--osc52] <hex-scalar>\n\
-   Example: gak U+1F600\n\
-  \  --osc52  Send a clipboard request to the terminal (e.g. over SSH)"
+  "Usage: kar [--osc52] <hex-scalar>\n\
+   Example: kar U+1F600\n\
+  \  --osc52  Send clipboard request to terminal (e.g. over SSH)"
 
 let fail message =
-  prerr_endline ("gak: " ^ message);
+  prerr_endline ("kar: " ^ message);
   exit 1
 
 let run ~osc52 input =

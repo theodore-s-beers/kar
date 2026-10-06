@@ -1,10 +1,10 @@
 (lang dune 3.0)
-(name gak)
+(name kar)
 (cram enable)
 (generate_opam_files true)
 
 (package
- (name gak)
+ (name kar)
  (depends
   (ocaml (>= 4.14))
   dune
