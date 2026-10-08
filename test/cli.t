@@ -42,19 +42,19 @@ Invalid input must fail before invoking the clipboard command.
   [1]
   $ test ! -e clipboard
   $ ../bin/main.exe
-  Usage: kar [--osc52] <hex-scalar>
-  Example: kar U+1F600
-    --osc52  Send clipboard request to terminal (e.g. over SSH)
+  kar: expected exactly one Unicode scalar value
   [1]
   $ ../bin/main.exe 41 42
-  Usage: kar [--osc52] <hex-scalar>
-  Example: kar U+1F600
-    --osc52  Send clipboard request to terminal (e.g. over SSH)
+  kar: expected exactly one Unicode scalar value
   [1]
   $ ../bin/main.exe --help
   Usage: kar [--osc52] <hex-scalar>
   Example: kar U+1F600
     --osc52  Send clipboard request to terminal (e.g. over SSH)
+    -h  Display this list of options
+    --  Treat remaining arguments as code points
+    -help  Display this list of options
+    --help  Display this list of options
 
 Clipboard failures must propagate to the caller.
 
@@ -128,18 +128,62 @@ OSC 52 requires terminal output and never invokes a desktop clipboard backend.
   [1]
   $ test ! -s output
   $ ../bin/main.exe --osc52
-  Usage: kar [--osc52] <hex-scalar>
-  Example: kar U+1F600
-    --osc52  Send clipboard request to terminal (e.g. over SSH)
+  kar: expected exactly one Unicode scalar value
   [1]
 
-Both help flags work before or after --osc52 without touching the clipboard.
+Help works alongside options and positional arguments without touching the clipboard.
 
   $ ../bin/main.exe --help > expected-help
-  $ for flag in --help -h; do
+  $ for flag in --help -h -help; do
   >   ../bin/main.exe --osc52 "$flag" > actual-help || exit 1
   >   cmp expected-help actual-help || exit 1
   >   ../bin/main.exe "$flag" --osc52 > actual-help || exit 1
   >   cmp expected-help actual-help || exit 1
+  >   ../bin/main.exe "$flag" 41 > actual-help || exit 1
+  >   cmp expected-help actual-help || exit 1
+  >   ../bin/main.exe 41 "$flag" > actual-help || exit 1
+  >   cmp expected-help actual-help || exit 1
+  >   ../bin/main.exe --osc52 41 "$flag" > actual-help || exit 1
+  >   cmp expected-help actual-help || exit 1
   > done
   $ test ! -e clipboard
+
+Unknown options fail as options, including after a positional argument.
+
+  $ ../bin/main.exe --bogus > output 2> error
+  [1]
+  $ head -n 1 error
+  ../bin/main.exe: unknown option '--bogus'.
+  $ test ! -s output
+  $ ../bin/main.exe 41 --bogus > output 2> error
+  [1]
+  $ head -n 1 error
+  ../bin/main.exe: unknown option '--bogus'.
+  $ test ! -s output
+  $ test ! -e clipboard
+
+Repeated boolean flags are harmless; a scalar is still required.
+
+  $ ../bin/main.exe --osc52 41 --osc52 > output
+  kar: --osc52 requires standard output to be a terminal
+  [1]
+  $ test ! -s output
+  $ ../bin/main.exe --osc52 --osc52
+  kar: expected exactly one Unicode scalar value
+  [1]
+  $ ../bin/main.exe 41 --osc52 42
+  kar: expected exactly one Unicode scalar value
+  [1]
+  $ test ! -e clipboard
+
+The option terminator makes every subsequent argument positional.
+
+  $ ../bin/main.exe -- --help
+  kar: expected hexadecimal digits, optionally prefixed by U+ or 0x
+  [1]
+  $ test ! -e clipboard
+  $ ../bin/main.exe -- 41
+  Copied to clipboard:
+  U+0041 LATIN CAPITAL LETTER A
+  $ printf A > expected
+  $ cmp expected clipboard

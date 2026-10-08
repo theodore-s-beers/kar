@@ -40,6 +40,8 @@ kar 41       # A
 
 Pass exactly one hexadecimal Unicode scalar value. The `U+` and `0x` prefixes are optional and case-insensitive. Bare numbers are also treated as hexadecimal. Valid values range from `0000` to `10FFFF`, excluding surrogates (`D800`–`DFFF`).
 
+Options can appear before or after the code point. Use `kar --help` (or `kar -h`) to list them, and `--` to end option parsing.
+
 `kar` copies the character _without_ adding a newline and confirms success with the code point and its Unicode name:
 
 ```text

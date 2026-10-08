@@ -1,8 +1,3 @@
-let usage =
-  "Usage: kar [--osc52] <hex-scalar>\n\
-   Example: kar U+1F600\n\
-  \  --osc52  Send clipboard request to terminal (e.g. over SSH)"
-
 let fail message =
   prerr_endline ("kar: " ^ message);
   exit 1
@@ -26,13 +21,10 @@ let run ~osc52 input =
             (Scalar.name scalar))
 
 let () =
-  match Array.to_list Sys.argv with
-  | [ _; ("--help" | "-h") ]
-  | [ _; "--osc52"; ("--help" | "-h") ]
-  | [ _; ("--help" | "-h"); "--osc52" ] ->
-      print_endline usage
-  | [ _; input ] when input <> "--osc52" -> run ~osc52:false input
-  | [ _; "--osc52"; input ] | [ _; input; "--osc52" ] -> run ~osc52:true input
-  | _ ->
-      prerr_endline usage;
+  match Cli.parse Sys.argv with
+  | Ok { osc52; inputs = [ input ] } -> run ~osc52 input
+  | Ok _ -> fail "expected exactly one Unicode scalar value"
+  | Error (`Help message) -> print_string message
+  | Error (`Error message) ->
+      prerr_string message;
       exit 1
